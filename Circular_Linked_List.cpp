@@ -7,29 +7,28 @@ struct Record {
     Record* next;
 };
 
-Record* head = NULL;
-void insert (){
+void insert (Record** head){
     Record* ptr = (Record*)malloc(sizeof(Record));
     cout << "Enter Roll no of the Student : ";
     cin >> ptr->rollNo;
     cout << "Enter CGPA of Student : ";
     cin >> ptr->CGPA;
     ptr->next = NULL;
-    if (head == NULL){
-        head = ptr;
-        head->next = head;
+    if (*head == NULL){
+        *head = ptr;
+        (*head)->next = *head;
         return;
     }
-    Record* curr = head;
-    while (curr->next != head){
+    Record* curr = *head;
+    while (curr->next != *head){
         curr = curr->next;
     }
     curr->next = ptr;
-    ptr->next = head;
+    ptr->next = *head;
     
 }
 
-void search (){
+void search (Record* head){
     if (head == NULL){
         cout << "List is Empty" << endl;
         return;
@@ -54,7 +53,7 @@ void search (){
     }
 }
 
-void print (){
+void print (Record* head){
     if (head == NULL){
         cout << "List is Empty" << endl;
         return;
@@ -70,39 +69,39 @@ void print (){
     } while (curr != head);
 }
 
-void deleteElement (){
-    if (head == NULL){
+void deleteElement (Record** head){
+    if (*head == NULL){
         cout << "List is Empty "<< endl;
         return;
     }
     int toDelete;
     cout << "Enter Roll no of Student which you want to Delete : ";
     cin >> toDelete;
-    if (head->next == head){
-        if (head->rollNo == toDelete){
-            free(head);
-            head = NULL;
+    if ((*head)->next == *head){
+        if ((*head)->rollNo == toDelete){
+            free(*head);
+            *head = NULL;
             cout << "Deleted Successfully"<< endl;
         } else {
             cout << "Roll no not Found in the List"<<endl;
         }
         return;
     } 
-    Record* last = head;
-    while (last->next != head){
+    Record* last = *head;
+    while (last->next != *head){
         last = last->next;
     }
-    Record* curr = head;
-    if (toDelete == head->rollNo){
-        head = head->next;
+    Record* curr = *head;
+    if (toDelete == (*head)->rollNo){
+        *head = (*head)->next;
         free(curr);
-        last->next = head;
+        last->next = *head;
         cout << "Deleted successfully  " << endl;
         return;
     }
-    Record* prev = head;
+    Record* prev = *head;
     curr = prev->next;
-    while(curr != head){
+    while(curr != *head){
         if (curr->rollNo == toDelete){
             prev->next = curr->next;
             free(curr);
@@ -112,52 +111,53 @@ void deleteElement (){
         prev = prev->next;
         curr = curr->next;
     }
-    if (curr == head){
+    if (curr == *head){
         cout << "Roll no Not found in the List"<<endl;
     }
 }
 
-void deleteList (){
-    if (head == NULL){
+void deleteList (Record** head){
+    if (*head == NULL){
         cout << "List is empty " << endl;
         return;
     }
-    if (head->next == head){
-        free(head);
-        head = NULL;
+    if ((*head)->next == *head){
+        free(*head);
+        *head = NULL;
         cout << "Whole List Deleted "<<endl;
         return;
     }
-    Record* last = head;
-    while (last->next != head){
+    Record* last = *head;
+    while (last->next != *head){
         last = last->next;
     }
-    Record* curr = head;
-    while (head != last){
-        head = head->next;
+    Record* curr = *head;
+    while (*head != last){
+        *head = (*head)->next;
         free(curr);
-        curr = head;
+        curr = *head;
     }
-    free(head);
-    head = NULL;
+    free(*head);
+    *head = NULL;
     cout << "Whole List deleted"<<endl;
 }
 
 int main (){
+    Record* head = NULL;
     int n;
     do {
         cout << "Enter 1 to Insert data " << endl << "Enter 2 to search data " << endl << "Enter 3 to print all Records" << endl << "Enter 4 to Delete a Record " << endl << "Enter 5 to Delete whole List " << endl << "Enter 6 to Quit" << endl;
         cin >> n;
         if (n == 1){
-            insert ();
+            insert (&head);
         } else if (n == 2){
-            search ();
+            search (head);
         } else if (n == 3){
-            print();
+            print(head);
         }  else if (n == 4){
-            deleteElement();
+            deleteElement(&head);
         } else if (n == 5){
-            deleteList();
+            deleteList(&head);
         }
     } while (n != 6);
 }

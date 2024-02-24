@@ -8,8 +8,8 @@ struct Record {
     Record* next;
 };
 
-Record* head = NULL;
-void insert (){
+
+void insert (Record** head){
     Record* ptr = (Record*)malloc(sizeof(Record));
     cout << "Enter Roll no of the Student : ";
     cin >> ptr->rollNo;
@@ -17,11 +17,11 @@ void insert (){
     cin >> ptr->CGPA;
     ptr->prev = NULL;
     ptr->next = NULL;
-    if (head == NULL){
-        head = ptr;
+    if (*head == NULL){
+        *head = ptr;
         return;
     }
-    Record* curr = head;
+    Record* curr = *head;
     while (curr->next != NULL){
         curr = curr->next;
     }
@@ -29,7 +29,7 @@ void insert (){
     ptr->prev = curr;
 }
 
-void search (){
+void search (Record* head){
     if (head == NULL){
         cout << "List is Empty" << endl;
         return;
@@ -54,7 +54,7 @@ void search (){
     }
 }
 
-void print (){
+void print (Record* head){
     if (head == NULL){
         cout << "List is Empty" << endl;
         return;
@@ -66,18 +66,18 @@ void print (){
     }
 }
 
-void deleteElement (){
-    if (head == NULL){
+void deleteElement (Record** head){
+    if (*head == NULL){
         cout << "List is Empty "<< endl;
         return;
     }
     int toDelete;
     cout << "Enter Roll no of Student which you want to Delete : ";
     cin >> toDelete;
-    Record* curr = head;
+    Record* curr = *head;
     if (curr->rollNo == toDelete){
-        head = head->next;
-        head->prev = NULL;
+        *head = (*head)->next;
+        (*head)->prev = NULL;
         free(curr);
         cout << "Deleted successfully  " << endl;
         return;
@@ -98,35 +98,36 @@ void deleteElement (){
     }
 }
 
-void deleteList (){
-    if (head == NULL){
+void deleteList (Record** head){
+    if (*head == NULL){
         cout << "List is empty " << endl;
         return;
     }
-    Record* curr = head;
-    while (head != NULL){
-        head = head->next;
+    Record* curr = *head;
+    while (*head != NULL){
+        *head = (*head)->next;
         free(curr);
-        curr = head;
+        curr = *head;
     }
     cout << "Whole List Deleted "<< endl;
 }
 
 int main (){
+    Record* head = NULL;
     int n;
     do {
         cout << "Enter 1 to Insert data " << endl << "Enter 2 to search data " << endl << "Enter 3 to print all Records" << endl << "Enter 4 to Delete a Record " << endl << "Enter 5 to Delete whole List " << endl << "Enter 6 to Quit" << endl;
         cin >> n;
         if (n == 1){
-            insert ();
+            insert (&head);
         } else if (n == 2){
-            search ();
+            search (head);
         } else if (n == 3){
-            print();
+            print(head);
         }  else if (n == 4){
-            deleteElement();
+            deleteElement(&head);
         } else if (n == 5){
-            deleteList();
+            deleteList(&head);
         }
     } while (n != 6);
 }
