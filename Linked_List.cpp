@@ -5,6 +5,7 @@ struct Record {
     int rollNo;
     float CGPA;
     Record* next;
+    int index;
 };
 
 void insert (Record** head){
@@ -15,12 +16,15 @@ void insert (Record** head){
     cin >> ptr->CGPA;
     ptr->next = NULL;
     if (*head == NULL){
+        ptr->index = 0;
         *head = ptr;
         return;
     }
     Record* curr = *head;
+    ptr->index = 1;
     while (curr->next != NULL){
         curr = curr->next;
+        ptr->index++;
     }
     curr->next = ptr;
 }
@@ -53,7 +57,7 @@ void print (Record* head){
     }
     Record* curr = head;
     while (curr != NULL){
-        cout << "CGPA of Roll no "<<curr->rollNo<< " is "<<curr->CGPA<< endl;
+        cout << "CGPA of Roll no "<<curr->rollNo<< " is "<<curr->CGPA<< " and the index of Node is " << curr->index << endl;
         curr = curr->next;
     }
 }
@@ -70,6 +74,11 @@ void deleteElement (Record** head){
     if (toDelete == curr->rollNo){
         *head = (*head)->next;
         free(curr);
+        curr = *head;
+        while (curr != NULL){
+            curr->index--;
+            curr = curr->next;
+        }
         cout << "Deleted successfully  " << endl;
         return;
     }
@@ -80,13 +89,19 @@ void deleteElement (Record** head){
             prev->next = curr->next;
             free(curr);
             cout << "Deleted successfully  " << endl;
-            return;
+            break;
         }
         prev = prev->next;
         curr = curr->next;
     }
     if (curr == NULL){
         cout << "Roll no Not found in the List " << endl;
+    } else {
+        prev = prev->next;
+        while (prev != NULL){
+            prev->index--;
+            prev = prev->next;
+        }
     }
 }
 
@@ -99,20 +114,27 @@ void deleteList (Record** head){
     while (*head != NULL){
         *head = (*head)->next;
         free(curr);
+        cout << curr->rollNo << " " << curr->CGPA << "ye masla arha hai " <<endl;
         curr = *head;
     }
     cout << "Whole List Deleted "<< endl;
 }
 
-int count (){
-
+int count (Record* head){
+    int count = 0;
+    Record* curr = head;
+    while (curr != NULL){
+        count++;
+        curr = curr->next;
+    }
+    return count;
 }
 
 int main (){
     Record* head = NULL;
     int n;
     do {
-        cout << "Enter 1 to Insert data " << endl << "Enter 2 to search data " << endl << "Enter 3 to print all Records" << endl << "Enter 4 to Delete a Record " << endl << "Enter 5 to Delete whole List " << endl << "Enter 6 to Quit" << endl;
+        cout << "Enter 1 to Insert data " << endl << "Enter 2 to search data " << endl << "Enter 3 to print all Records" << endl << "Enter 4 to Delete a Record " << endl << "Enter 5 to Delete whole List " << endl << "Enter 6 to print total no of Nodes " << endl << "Enter 7 to Quit" << endl;
         cin >> n;
         if (n == 1){
             insert (&head);
@@ -124,6 +146,8 @@ int main (){
             deleteElement(&head);
         } else if (n == 5){
             deleteList(&head);
+        } else if (n == 6){
+            cout << "Total no of Nodes are " << count(head) << endl;
         }
-    } while (n != 6);
+    } while (n != 7);
 }
