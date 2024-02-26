@@ -8,7 +8,76 @@ struct Record {
     int index;
 };
 
-void insert (Record** head){
+void sortedInsert (Record** head){
+    Record* ptr = (Record*)malloc(sizeof(Record));
+    cout << "Enter Roll no of the Student : ";
+    cin >> ptr->rollNo;
+    cout << "Enter CGPA of Student : ";
+    cin >> ptr->CGPA;
+    if (*head == NULL){
+        ptr->next = NULL;
+        ptr->index = 0;
+        *head = ptr;
+        return;
+    }
+    Record* curr = *head;
+    if (ptr->rollNo < (*head)->rollNo){
+        ptr->next = *head;
+        ptr->index = 0;
+        *head = ptr;
+        while (curr != NULL){
+            curr->index++;
+            curr = curr->next;
+        }
+        return;
+    }
+    Record* prev = *head;
+    curr = prev->next;
+    while (curr != NULL){
+        if (ptr->rollNo < curr->rollNo){
+            ptr->next = curr;
+            ptr->index = (prev->index) + 1;
+            prev->next = ptr;
+            while (curr != NULL){
+                curr->index++;
+                curr = curr->next;
+            }
+            return;
+        }
+        prev = prev->next;
+        curr = curr->next;
+    }
+    if (curr == NULL){
+        ptr->next = NULL;
+        ptr->index = (prev->index) + 1;
+        prev->next = ptr;
+    }
+
+}
+
+void insertFirst (Record** head){
+    Record* ptr = (Record*)malloc(sizeof(Record));
+    cout << "Enter Roll no of the Student : ";
+    cin >> ptr->rollNo;
+    cout << "Enter CGPA of Student : ";
+    cin >> ptr->CGPA;
+    if (*head == NULL){
+        ptr->next = NULL;
+        ptr->index = 0;
+        *head = ptr;
+        return;
+    }
+    ptr->next = *head;
+    ptr->index = 0;
+    *head = ptr;
+    Record* curr = (*head)->next;
+    while (curr != NULL){
+        curr->index++;
+        curr = curr->next;
+    }
+}
+
+void insertLast (Record** head){
     Record* ptr = (Record*)malloc(sizeof(Record));
     cout << "Enter Roll no of the Student : ";
     cin >> ptr->rollNo;
@@ -114,7 +183,7 @@ void deleteList (Record** head){
     while (*head != NULL){
         *head = (*head)->next;
         free(curr);
-        cout << curr->rollNo << " " << curr->CGPA << "ye masla arha hai " <<endl;
+        // cout << curr->rollNo << " " << curr->CGPA << "ye masla arha hai " <<endl;
         curr = *head;
     }
     cout << "Whole List Deleted "<< endl;
@@ -137,7 +206,7 @@ int main (){
         cout << "Enter 1 to Insert data " << endl << "Enter 2 to search data " << endl << "Enter 3 to print all Records" << endl << "Enter 4 to Delete a Record " << endl << "Enter 5 to Delete whole List " << endl << "Enter 6 to print total no of Nodes " << endl << "Enter 7 to Quit" << endl;
         cin >> n;
         if (n == 1){
-            insert (&head);
+            sortedInsert (&head);
         } else if (n == 2){
             search (head);
         } else if (n == 3){
