@@ -9,6 +9,58 @@ struct Record {
     int index;
 };
 
+void sortedInsert (Record** head){
+    Record* ptr = (Record*)malloc(sizeof(Record));
+    cout << "Enter Roll no of the Student : ";
+    cin >> ptr->rollNo;
+    cout << "Enter CGPA of Student : ";
+    cin >> ptr->CGPA;
+    if (*head == NULL){
+        ptr->prev = NULL;
+        ptr->next = NULL;
+        ptr->index = 0;
+        *head = ptr;
+        return;
+    }
+    Record* curr = *head;
+    if (ptr->rollNo < (*head)->rollNo){
+        ptr->prev = NULL;
+        ptr->next = *head;
+        ptr->index = 0;
+        *head = ptr;
+        curr->prev = *head;
+        while (curr != NULL){
+            curr->index++;
+            curr = curr->next;
+        }
+        return;
+    }
+    curr = (*head)->next;
+    while (curr != NULL){
+        if (ptr->rollNo < curr->rollNo){
+            ptr->next = curr;
+            ptr->index = (curr->prev->index) + 1;
+            curr->prev->next = ptr;
+            while (curr != NULL){
+                curr->index++;
+                curr = curr->next;
+            }
+            return;
+        }
+        curr = curr->next;
+    }
+    if (curr == NULL){
+        curr = (*head)->next;
+        while (curr->next != NULL){
+            curr = curr->next;
+        }
+        curr->next = ptr;
+        ptr->prev = curr;
+        ptr->next = NULL;
+        ptr->index = (curr->index) + 1;
+    }
+
+}
 
 void insert (Record** head){
     Record* ptr = (Record*)malloc(sizeof(Record));
@@ -145,7 +197,7 @@ int main (){
         cout << "Enter 1 to Insert data " << endl << "Enter 2 to search data " << endl << "Enter 3 to print all Records" << endl << "Enter 4 to Delete a Record " << endl << "Enter 5 to Delete whole List " << endl << "Enter 6 to print total no of Nodes " <<endl << "Enter 7 to Quit" << endl;
         cin >> n;
         if (n == 1){
-            insert (&head);
+            sortedInsert (&head);
         } else if (n == 2){
             search (head);
         } else if (n == 3){

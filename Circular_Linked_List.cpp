@@ -8,6 +8,58 @@ struct Record {
     int index;
 };
 
+void sortedInsert (Record** head){
+    Record* ptr = (Record*)malloc(sizeof(Record));
+    cout << "Enter Roll no of the Student : ";
+    cin >> ptr->rollNo;
+    cout << "Enter CGPA of Student : ";
+    cin >> ptr->CGPA;
+    if (*head == NULL){
+        ptr->index = 0;
+        *head = ptr;
+        ptr->next = *head;
+        return;
+    }
+    Record* last = *head;
+    while (last->next != *head){
+        last = last->next;
+    }
+    Record* curr = *head;
+    if (ptr->rollNo < (*head)->rollNo){
+        ptr->index = 0;
+        ptr->next = *head;
+        *head = ptr;
+        last->next = *head;
+        while (curr != *head){
+            curr->index++;
+            curr = curr->next;
+        }
+        return;
+    }
+    Record* prev = *head;
+    curr = prev->next;
+    while (curr != *head){
+        if (ptr->rollNo < curr->rollNo){
+            ptr->next = curr;
+            ptr->index = (prev->index) + 1;
+            prev->next = ptr;
+            while (curr != *head){
+                curr->index++;
+                curr = curr->next;
+            }
+            return;
+        }
+        prev = prev->next;
+        curr = curr->next;
+    }
+    if (curr == *head){
+        ptr->next = *head;
+        ptr->index = (prev->index) + 1;
+        prev->next = ptr;
+    }
+
+}
+
 void insert (Record** head){
     Record* ptr = (Record*)malloc(sizeof(Record));
     cout << "Enter Roll no of the Student : ";
@@ -171,10 +223,10 @@ int main (){
     Record* head = NULL; 
     int n;
     do {
-        cout << "Enter 1 to Insert data " << endl << "Enter 2 to search data " << endl << "Enter 3 to print all Records" << endl << "Enter 4 to Delete a Record " << endl << "Enter 5 to Delete whole List " << endl << "Enter 6 to print total no of Nodes " << endl << "Enter 6 to Quit" << endl;
+        cout << "Enter 1 to Insert data " << endl << "Enter 2 to search data " << endl << "Enter 3 to print all Records" << endl << "Enter 4 to Delete a Record " << endl << "Enter 5 to Delete whole List " << endl << "Enter 6 to print total no of Nodes " << endl << "Enter 7 to Quit" << endl;
         cin >> n;
         if (n == 1){
-            insert (&head);
+            sortedInsert (&head);
         } else if (n == 2){
             search (head);
         } else if (n == 3){
